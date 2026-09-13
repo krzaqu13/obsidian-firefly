@@ -1,0 +1,143 @@
+/* eslint-disable @typescript-eslint/no-misused-promises, no-empty -- Obsidian's API surface and several untyped third-party libraries force dynamic dispatch; floating promises are intentional in DOM/event handlers; matching enable at end of file */
+import * as obsidian from 'obsidian';
+import type { ViewSnapshotService, ViewSnapshotMeta } from '../services/ViewSnapshotService';
+import { App, Modal, Notice } from 'obsidian';
+
+/* ─── Manage Snapshots Modal ──────────────────────────────── */
+
+export function openManageSnapshotsModal(
+    app: App,
+    service: ViewSnapshotService,
+): void {
+    new ManageSnapshotsModal(app, service).open();
+}
+
+class ManageSnapshotsModal extends Modal {
+    private service: ViewSnapshotService;
+    private listEl!: HTMLElement;
+
+    constructor(app: App, service: ViewSnapshotService) {
+        super(app);
+        this.service = service;
+    }
+
+    async onOpen() {
+        this.titleEl.setText('View snapshots');
+        this.modalEl.addClass('sl-snapshot-modal');
+
+        // Header row
+        const header = this.contentEl.createDiv({ cls: 'sl-snapshot-header' });
+        header.createSpan({ text: 'Board & plot grid layouts for this project.' });
+
+        const newDiv = header.createDiv({ cls: 'sl-snapshot-new-btn clickable-icon' });
+        obsidian.setIcon(newDiv, 'plus');
+        newDiv.setAttribute('aria-label', 'New snapshot');
+        newDiv.addEventListener('click', async () => {
+            const snap = await this.service.createSnapshot(`Snapshot ${await this.service.getNextId()}`);
+            new Notice(`Created snapshot #${snap.id}`);
+            await this.renderList();
+        });
+
+        this.listEl = this.contentEl.createDiv({ cls: 'sl-snapshot-list' });
+        await this.renderList();
+    }
+
+    private async renderList() {
+        this.listEl.empty();
+        const metas = await this.service.listSnapshots();
+        const activeId = this.service.activeSnapshotId;
+
+        if (metas.length === 0) {
+            this.listEl.createEl('p', {
+                text: 'No snapshots yet. Click + to capture the current board and plot grid layout.',
+                cls: 'sl-snapshot-empty',
+            });
+            return;
+        }
+
+        for (const meta of metas) {
+            this.renderSnapshotItem(meta, meta.id === activeId);
+        }
+    }
+
+    private renderSnapshotItem(meta: ViewSnapshotMeta, isActive: boolean) {
+        const row = this.listEl.createDiv({ cls: `sl-snapshot-item${isActive ? ' is-active' : ''}` });
+
+        // Info
+        const info = row.createDiv({ cls: 'sl-snapshot-info' });
+        const titleLine = info.createDiv({ cls: 'sl-snapshot-title-line' });
+        titleLine.createSpan({ text: `#${meta.id}`, cls: 'sl-snapshot-id' });
+
+        if (isActive) {
+        }
+
+        const dateStr = new Date(meta.modified ?? meta.created).toLocaleString();
+        info.createDiv({ text: dateStr, cls: 'sl-snapshot-date' });
+        if (meta.description) {
+            info.createDiv({ text: meta.description, cls: 'sl-snapshot-desc' });
+        }
+
+        // Actions (divs, not buttons)
+        const actions = row.createDiv({ cls: 'sl-snapshot-actions' });
+
+        if (!isActive) {
+            const loadDiv = actions.createDiv({ cls: 'sl-snapshot-action-btn clickable-icon', attr: { 'aria-label': 'Load' } });
+            obsidian.setIcon(loadDiv, 'upload');
+            loadDiv.createSpan({ text: 'Load' });
+            loadDiv.addEventListener('click', async () => {
+                const ok = await this.service.restoreSnapshot(meta.id);
+                if (ok) {
+                    new Notice(`Loaded snapshot #${meta.id} "${meta.name}".`);
+                    this.close();
+                } else {
+                    new Notice('Failed to load snapshot.');
+                }
+            });
+        }
+
+        const editDiv = actions.createDiv({ cls: 'sl-snapshot-action-btn clickable-icon', attr: { 'aria-label': 'Edit' } });
+        obsidian.setIcon(editDiv, 'pencil');
+        editDiv.addEventListener('click', () => {
+            this.openEditInline(meta, row);
+        });
+
+        const deleteDiv = actions.createDiv({ cls: 'sl-snapshot-action-btn clickable-icon sl-snapshot-delete', attr: { 'aria-label': 'Delete' } });
+        obsidian.setIcon(deleteDiv, 'trash-2');
+        deleteDiv.addEventListener('click', async () => {
+            await this.service.deleteSnapshot(meta.id);
+            new Notice(`Deleted snapshot #${meta.id}.`);
+            await this.renderList();
+        });
+    }
+
+    private openEditInline(meta: ViewSnapshotMeta, row: HTMLElement) {
+        row.empty();
+        row.addClass('sl-snapshot-editing');
+
+        const form = row.createDiv({ cls: 'sl-snapshot-edit-form' });
+
+        const nameInput = form.createEl('input', { type: 'text', cls: 'sl-snapshot-edit-input', value: meta.name });
+        nameInput.placeholder = 'Name';
+
+        const descInput = form.createEl('input', { type: 'text', cls: 'sl-snapshot-edit-input', value: meta.description ?? '' });
+        descInput.placeholder = 'Description (optional)';
+
+        const btns = form.createDiv({ cls: 'sl-snapshot-edit-btns' });
+        const saveDiv = btns.createDiv({ cls: 'sl-snapshot-action-btn clickable-icon', attr: { 'aria-label': 'Save' } });
+        obsidian.setIcon(saveDiv, 'check');
+        saveDiv.createSpan({ text: 'Save' });
+        saveDiv.addEventListener('click', async () => {
+            const n = nameInput.value.trim();
+            if (!n) { new Notice('Name is required.'); return; }
+            await this.service.updateMeta(meta.id, n, descInput.value.trim());
+            await this.renderList();
+        });
+
+        const cancelDiv = btns.createDiv({ cls: 'sl-snapshot-action-btn clickable-icon', attr: { 'aria-label': 'Cancel' } });
+        obsidian.setIcon(cancelDiv, 'x');
+        cancelDiv.addEventListener('click', () => this.renderList());
+
+        window.setTimeout(() => nameInput.focus(), 30);
+    }
+}
+/* eslint-enable @typescript-eslint/no-misused-promises, no-empty -- end of file-wide suppression block opened at line 1 */

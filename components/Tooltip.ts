@@ -1,0 +1,46 @@
+ 
+/**
+ * Instant tooltip utility — attaches a zero-delay tooltip to any element.
+ *
+ * Uses a real DOM element appended to activeDocument.body, positioned via
+ * getBoundingClientRect().  This avoids Obsidian's slow built-in tooltip
+ * (~500 ms delay) and CSS ::after flicker issues.
+ *
+ * Usage:
+ *   import { attachTooltip } from '../components/Tooltip';
+ *   attachTooltip(myButton, 'Bold');
+ */
+
+const TOOLTIP_CLASS = 'sl-instant-tooltip';
+
+/**
+ * Attach an instant tooltip to `el`.
+ * The tooltip appears below the element on mouseenter and is removed on
+ * mouseleave or click.  Any stale tooltips left behind by DOM re-renders
+ * are cleaned up automatically.
+ */
+export function attachTooltip(el: HTMLElement, text: string): void {
+    let tip: HTMLDivElement | null = null;
+
+    const remove = () => {
+        if (tip) { tip.remove(); tip = null; }
+    };
+
+    el.addEventListener('mouseenter', () => {
+        // Remove any stale tooltips (e.g. from toolbar re-renders)
+        activeDocument.querySelectorAll(`.${TOOLTIP_CLASS}`).forEach(t => t.remove());
+
+        tip = activeDocument.body.createDiv({ cls: TOOLTIP_CLASS, text });
+        tip.textContent = text;
+
+        const rect = el.getBoundingClientRect();
+        tip.setCssStyles({
+            left: `${rect.left + rect.width / 2}px`,
+            top: `${rect.bottom + 4}px`,
+        });
+    });
+
+    el.addEventListener('mouseleave', remove);
+    el.addEventListener('click', remove);
+}
+ 
