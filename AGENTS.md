@@ -147,11 +147,10 @@ this.app.vault.modify(file, content);
 .firefly-main-view
 └── .firefly-root (flex-row, height: 100%)
     ├── .firefly-area-sidebar   (48px — pionowy pasek ikon obszarów)
-    └── .firefly-right-panel    (flex-col, flex: 1)
+    ├── .firefly-inner-sidebar  (220px — zakładki obszaru, pełna wysokość)
+    └── .firefly-right-content  (flex-col, flex: 1)
         ├── .firefly-topbar     (44px — przyciski widoku + akcje)
-        └── .firefly-body       (flex-row, flex: 1)
-            ├── .firefly-inner-sidebar  (220px — zakładki obszaru)
-            └── .firefly-main-section   (flex: 1 — główna treść)
+        └── .firefly-main-section   (flex: 1 — główna treść)
 ```
 
 **Nie zmieniaj `.firefly-area-sidebar`** — to zewnętrzny pasek obszarów z działającą logiką.

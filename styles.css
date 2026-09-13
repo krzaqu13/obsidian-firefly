@@ -13303,3 +13303,574 @@ body.sl-focus-active-global .titlebar {
 .sl-series-delete:hover {
     color: var(--text-error);
 }
+
+/* ─── Firefly: layout 3-strefowy ───────────────────────── */
+
+.firefly-right-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Topbar */
+.firefly-topbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    flex-shrink: 0;
+    padding: 0 12px;
+    background-color: var(--background-primary);
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.firefly-topbar-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+}
+
+.firefly-topbar-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.firefly-view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-s);
+    background: none;
+    cursor: pointer;
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+    white-space: nowrap;
+    transition: background-color 100ms ease, color 100ms ease;
+}
+
+.firefly-view-btn:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.firefly-view-btn.is-active {
+    color: var(--text-normal);
+    background-color: var(--background-modifier-active-hover);
+}
+
+.firefly-view-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.4;
+}
+
+.firefly-topbar-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: var(--radius-s);
+    background: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background-color 100ms ease, color 100ms ease;
+}
+
+.firefly-topbar-icon-btn:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.firefly-topbar-icon-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.4;
+}
+
+/* Inner Sidebar */
+.firefly-inner-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    background-color: var(--background-secondary);
+    border-right: 1px solid var(--background-modifier-border);
+    padding: 8px 0;
+}
+
+.firefly-sidebar-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.firefly-sidebar-section-header {
+    padding: 8px 12px 4px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    user-select: none;
+}
+
+.firefly-sidebar-separator {
+    height: 1px;
+    background-color: var(--background-modifier-border);
+    margin: 6px 0;
+}
+
+.firefly-sidebar-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    border-radius: var(--radius-s);
+    cursor: pointer;
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+    transition: background-color 80ms ease, color 80ms ease;
+    user-select: none;
+}
+
+.firefly-sidebar-item:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.firefly-sidebar-item.is-active {
+    background-color: var(--background-modifier-active-hover);
+    color: var(--text-accent);
+}
+
+.firefly-sidebar-item svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.4;
+    flex-shrink: 0;
+}
+
+.firefly-sidebar-item-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Main Section */
+.firefly-main-section {
+    flex: 1;
+    overflow: auto;
+    background-color: var(--background-primary);
+}
+
+.firefly-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    padding: 32px;
+    text-align: center;
+}
+
+.firefly-empty-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke-width: 1;
+    color: var(--text-faint);
+}
+
+.firefly-empty-title {
+    font-size: var(--font-ui-medium);
+    font-weight: 600;
+    color: var(--text-normal);
+    margin: 0;
+}
+
+.firefly-empty-subtitle {
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* ── Firefly View Launcher Cards ── */
+.firefly-area-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 32px;
+    background: var(--background-primary);
+}
+
+.firefly-view-launcher {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 400px;
+    padding: 32px 24px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-s);
+}
+
+.firefly-view-launcher-icon svg {
+    width: 48px;
+    height: 48px;
+    stroke-width: 1.4;
+    color: var(--text-accent);
+    margin-bottom: 16px;
+}
+
+.firefly-view-launcher-title {
+    font-size: var(--font-ui-large, 18px);
+    font-weight: 600;
+    color: var(--text-normal);
+    margin: 0 0 8px 0;
+}
+
+.firefly-view-launcher-desc {
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+    margin: 0 0 20px 0;
+    line-height: 1.4;
+}
+
+.firefly-view-launcher-btn {
+    cursor: pointer;
+    font-size: var(--font-ui-medium);
+}
+
+/* ── Firefly Main Frame & Flex Layout ── */
+.workspace-leaf-content[data-type="firefly-main-view"],
+.firefly-leaf-content {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.workspace-leaf-content[data-type="firefly-main-view"] > .view-header {
+    display: none !important;
+}
+
+.workspace-leaf-content[data-type="firefly-main-view"] > .view-content,
+.firefly-main-view {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0% !important;
+    height: 100% !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.firefly-root {
+    display: flex !important;
+    flex-direction: row !important;
+    flex: 1 1 0% !important;
+    height: 100% !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    background: var(--background-primary);
+    color: var(--text-normal);
+}
+
+/* Outer area sidebar (48px) */
+.firefly-area-sidebar {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 10px 0 !important;
+    gap: 8px !important;
+    background: var(--background-secondary) !important;
+    border-right: 1px solid var(--background-modifier-border) !important;
+    flex-shrink: 0 !important;
+}
+
+.firefly-area-btn {
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: var(--radius-s) !important;
+    cursor: pointer !important;
+    color: var(--text-muted) !important;
+    transition: background 0.15s, color 0.15s !important;
+}
+
+.firefly-area-btn:hover {
+    background: var(--background-modifier-hover) !important;
+    color: var(--text-normal) !important;
+}
+
+.firefly-area-btn.is-active {
+    background: var(--background-modifier-active-hover) !important;
+    color: var(--text-accent) !important;
+}
+
+.firefly-area-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.firefly-area-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke-width: 1.4 !important;
+}
+
+/* Inner sub-tab sidebar (220px) */
+.firefly-inner-sidebar {
+    width: 220px !important;
+    min-width: 220px !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 12px 8px !important;
+    gap: 4px !important;
+    background: var(--background-secondary) !important;
+    border-right: 1px solid var(--background-modifier-border) !important;
+    flex-shrink: 0 !important;
+    overflow-y: auto !important;
+}
+
+.firefly-sidebar-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+}
+
+.firefly-sidebar-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 10px !important;
+    border-radius: var(--radius-s) !important;
+    cursor: pointer !important;
+    color: var(--text-muted) !important;
+    font-size: var(--font-ui-small) !important;
+    transition: background 0.15s, color 0.15s !important;
+}
+
+.firefly-sidebar-item:hover {
+    background: var(--background-modifier-hover) !important;
+    color: var(--text-normal) !important;
+}
+
+.firefly-sidebar-item.is-active {
+    background: var(--background-modifier-active-hover) !important;
+    color: var(--text-normal) !important;
+    font-weight: 500 !important;
+}
+
+.firefly-sidebar-item-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.firefly-sidebar-item-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+    stroke-width: 1.4 !important;
+}
+
+.firefly-sidebar-section-header {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    color: var(--text-faint) !important;
+    padding: 8px 10px 4px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+.firefly-sidebar-separator {
+    height: 1px !important;
+    background: var(--background-modifier-border) !important;
+    margin: 6px 0 !important;
+}
+
+/* Right content column (topbar + main-section) */
+.firefly-right-content {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0% !important;
+    height: 100% !important;
+    width: calc(100% - 268px) !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Topbar */
+.firefly-topbar {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 16px !important;
+    background: var(--background-primary) !important;
+    border-bottom: 1px solid var(--background-modifier-border) !important;
+    flex-shrink: 0 !important;
+}
+
+.firefly-topbar-left,
+.firefly-topbar-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.firefly-view-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 4px 10px !important;
+    border-radius: var(--radius-s) !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--text-muted) !important;
+    font-size: var(--font-ui-small) !important;
+    cursor: pointer !important;
+}
+
+.firefly-view-btn:hover {
+    background: var(--background-modifier-hover) !important;
+    color: var(--text-normal) !important;
+}
+
+.firefly-view-btn.is-active {
+    background: var(--background-modifier-hover) !important;
+    border-color: var(--background-modifier-border) !important;
+    color: var(--text-normal) !important;
+    font-weight: 500 !important;
+}
+
+.firefly-view-btn-icon {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.firefly-view-btn-icon svg {
+    width: 14px !important;
+    height: 14px !important;
+    stroke-width: 1.4 !important;
+}
+
+.firefly-topbar-icon-btn {
+    width: 30px !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-muted) !important;
+    border-radius: var(--radius-s) !important;
+    cursor: pointer !important;
+}
+
+.firefly-topbar-icon-btn:hover {
+    background: var(--background-modifier-hover) !important;
+    color: var(--text-normal) !important;
+}
+
+.firefly-topbar-icon-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+    stroke-width: 1.4 !important;
+}
+
+/* Main section area */
+.firefly-main-section,
+.firefly-main-section.story-line-board-container,
+.firefly-main-section.plot-grid-root,
+.firefly-main-section.story-line-timeline-container,
+.firefly-main-section.story-line-manuscript-container,
+.firefly-main-section.story-line-codex-container,
+.firefly-main-section.story-line-storyline-container,
+.firefly-main-section.story-line-stats-container {
+    flex: 1 1 0% !important;
+    height: calc(100% - 44px) !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: var(--background-primary) !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Stretch embedded area containers and main areas to full width and height */
+.firefly-main-section > div,
+.firefly-main-section .story-line-main-area,
+.firefly-main-section .plot-grid-wrapper,
+.firefly-main-section .story-line-timeline-container,
+.firefly-main-section .story-line-manuscript-container,
+.firefly-main-section .story-line-codex-container,
+.firefly-main-section .story-line-storyline-container,
+.firefly-main-section .story-line-stats-container,
+.firefly-main-section .firefly-area-panel {
+    flex: 1 1 0% !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    padding-right: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: auto !important;
+}
+
+.firefly-main-section .story-line-board {
+    flex: 1 1 0% !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+}
+
+
+
