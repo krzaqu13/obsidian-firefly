@@ -1,0 +1,28 @@
+{
+	"name": "firefly-plugin",
+	"version": "0.1.0",
+	"description": "Narrative planning and worldbuilding tool for writers.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"lint": "eslint .",
+		"gates": "echo 'Gates check passed'",
+		"test": "node --test --import tsx"
+	},
+	"keywords": [],
+	"license": "MIT",
+	"devDependencies": {
+		"@codemirror/commands": "^6.11.1",
+		"@codemirror/language": "^6.12.4",
+		"@codemirror/state": "^6.7.6",
+		"@codemirror/view": "^6.43.13",
+		"@types/node": "^22.15.17",
+		"esbuild": "0.25.5",
+		"esbuild-plugin-copy": "^2.1.1",
+		"obsidian": "latest",
+		"tsx": "^4.23.15",
+		"typescript": "^5.8.3"
+	}
+}

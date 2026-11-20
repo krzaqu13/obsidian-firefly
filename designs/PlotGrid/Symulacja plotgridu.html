@@ -1,0 +1,423 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Symulacja plotgridu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Układ: pasek narzędzi, panel komórki, jedna tabela w przewijanym kontenerze. Ciemny motyw jak w widoku wtyczki, złoty akcent. */
+:root{
+  --bg:#0f0c08; --panel:#171209; --panel-2:#1e1810; --line:#2d2416;
+  --fg:#eee5d0; --muted:#a09274; --accent:#d4ad55; --accent-ink:#1a1405; --sel:#2b2212;
+  --ok:#6fbf86; --warn:#e0a24a; --info:#7fa8d1;
+  --k-zasiew:#6c9ccc; --k-czesciowo:#9cc99a; --k-pelne:#4aa36a; --k-podwazenie:#e0883f; --k-trop:#a487cf;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6f1e7; --panel:#fffdf8; --panel-2:#f0eadb; --line:#ddd3bd;
+    --fg:#261f12; --muted:#6c5f44; --accent:#8a6a1c; --accent-ink:#fffdf8; --sel:#f0e5c9;
+    --ok:#2f7a47; --warn:#965f0e; --info:#2f5f8f;
+    --k-zasiew:#2f6798; --k-czesciowo:#4d8a4d; --k-pelne:#1f7a45; --k-podwazenie:#b5601b; --k-trop:#6d4f9c;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f6f1e7; --panel:#fffdf8; --panel-2:#f0eadb; --line:#ddd3bd;
+  --fg:#261f12; --muted:#6c5f44; --accent:#8a6a1c; --accent-ink:#fffdf8; --sel:#f0e5c9;
+  --ok:#2f7a47; --warn:#965f0e; --info:#2f5f8f;
+  --k-zasiew:#2f6798; --k-czesciowo:#4d8a4d; --k-pelne:#1f7a45; --k-podwazenie:#b5601b; --k-trop:#6d4f9c;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 var(--sans);
+  padding-block:20px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));}
+.app{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:14px;min-width:0}
+h1{font-size:20px;font-weight:600;margin:0;letter-spacing:.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:12.5px;max-width:78ch}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:8px 12px;font:500 13px var(--sans);cursor:pointer}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--fg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:3px 10px;border-radius:999px;font:12px var(--sans);cursor:pointer;user-select:none}
+.pill input{accent-color:var(--accent);margin:0}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.pill.off{color:var(--muted)}
+.detail{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px 20px}
+.detail h2{font-size:13px;margin:0 0 4px;font-weight:600}
+.detail .path{font:12px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.detail pre{margin:0;background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:8px 10px;font:12px/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;max-height:11rem;overflow:auto}
+.detail p{margin:4px 0 0;color:var(--muted);font-size:12.5px}
+@media (max-width:720px){.detail{grid-template-columns:minmax(0,1fr)}}
+.scroll{overflow:auto;max-height:72vh;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+thead th{position:sticky;top:0;z-index:3;background:var(--panel-2);padding:8px 10px;font-weight:500}
+thead tr:nth-child(2) th{top:var(--h1,52px);z-index:3}
+.gh{border-top:3px solid var(--gc,var(--accent))}
+.gh .t{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block}
+.gh .n{font-weight:600;font-size:13.5px;color:var(--fg)}
+.gh .k{display:block;font:11px var(--mono);color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.sh{font-size:12.5px;color:var(--fg)}
+.sticky{position:sticky;left:0;z-index:2;background:var(--panel)}
+thead .sticky{z-index:5;background:var(--panel-2)}
+.col{min-width:230px;max-width:300px}
+.beat{min-width:210px;max-width:230px;padding:10px 12px}
+.beat .no{font:11px var(--mono);color:var(--muted)}
+.beat .nm{font-weight:600;font-size:14px}
+.beat .meta{color:var(--muted);font-size:12px}
+.badge{display:inline-block;font-size:11px;padding:0 7px;border-radius:999px;border:1px solid var(--line)}
+.badge.zatw{color:var(--ok);border-color:var(--ok)}
+.badge.prop{color:var(--warn);border-color:var(--warn)}
+.pips{display:inline-flex;gap:2px;vertical-align:middle}
+.pips i{width:9px;height:6px;border-radius:1px;background:var(--line)}
+.pips i.on{background:var(--accent)}
+td.cell{padding:0;cursor:pointer}
+td.cell .in{padding:8px 10px;max-height:10.5rem;overflow:hidden;position:relative;height:100%}
+td.cell.sel .in{max-height:none}
+td.cell:not(.sel) .in.long::after{content:"";position:absolute;inset:auto 0 0 0;height:28px;background:linear-gradient(transparent,var(--panel))}
+td.cell:hover{background:var(--panel-2)}
+td.cell.sel{background:var(--sel);box-shadow:inset 0 0 0 1.5px var(--accent)}
+td.cell ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+td.cell li{padding-left:10px;position:relative;font-size:13px}
+td.cell li::before{content:"";position:absolute;left:0;top:.62em;width:4px;height:4px;border-radius:50%;background:var(--muted)}
+td.empty .in{color:var(--muted);font-size:12px;opacity:.7}
+td.empty .in::before{content:"+ dodaj";}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--k);background:color-mix(in srgb,var(--k) 20%,transparent);color:var(--fg);border-radius:4px;padding:1px 7px;font-size:12px;cursor:pointer;font-family:var(--sans)}
+.chip b{font-weight:600}
+.chip.nofile{border-style:dashed}
+tfoot td{background:var(--panel-2);padding:6px 10px;font-size:12px;color:var(--muted);position:sticky;bottom:0}
+tfoot td.sticky{z-index:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted);align-items:center}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 14px;font-size:12.5px;color:var(--muted)}
+.note b{color:var(--fg);font-weight:500}
+.sec-title{font-weight:600}
+.small{font-size:12px;color:var(--muted)}
+.ok{color:var(--ok)} .warn{color:var(--warn)} .info{color:var(--info)}
+tr.hl td,tr.hl th{background:var(--sel)}
+.vlist{display:flex;flex-direction:column;gap:8px;padding:0;margin:0;list-style:none}
+.vitem{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.sev{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding-top:2px;min-width:92px}
+.vitem .t{font-weight:500}
+.vitem .d{color:var(--muted);font-size:12.5px;grid-column:2}
+.vitem .s{font:11.5px var(--mono);color:var(--muted);grid-column:2;overflow-wrap:anywhere}
+.counts{display:flex;gap:10px;flex-wrap:wrap}
+.count{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 14px;min-width:120px}
+.count .v{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.theme{margin-left:auto}
+.head{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.band th{background:var(--panel-2);padding:5px 10px;border-top:3px solid var(--gc,var(--accent));font-size:12.5px;font-weight:500}
+.band .t{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:10px}
+.bandin{position:sticky;left:10px;width:max-content;max-width:calc(100vw - 80px)}
+.rl{min-width:170px;max-width:200px;padding:8px 10px}
+.rl .small{font-weight:400}
+.rl .k{display:block;font:11px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.fillc{min-width:90px;padding:8px 10px;font-size:12px;color:var(--muted);font-weight:400}
+@media (prefers-reduced-motion:no-preference){td.cell,.tab{transition:background .12s,color .12s}}
+</style>
+
+<div class="app">
+  <div class="head">
+    <div style="min-width:0">
+      <div class="eyebrow">Choć cień nadziei · tom I</div>
+      <h1>Symulacja plotgridu</h1>
+      <div class="sub">Tak wyglądałby widok wtyczki przy modelu plików z wytycznych (wersja 2). Dane pochodzą z folderu Archiwum/Test: 5 beatów, 4 kolumny, 3 pliki sekretów, 1 scena. Strona nie czyta vaultu na żywo.</div>
+    </div>
+    <button class="pill theme" id="themeBtn" type="button" aria-label="Przełącz motyw">Motyw</button>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="view"></div>
+</div>
+
+<script>
+const KINDS={zasiew:'zasiew',czesciowo:'częściowo',pelne:'pełna',podwazenie:'podważenie',trop:'trop'};
+const KORDER=['zasiew','czesciowo','pelne','podwazenie'];
+
+const cols=[
+ {id:'merharin',type:'Arc',nazwa:'Łuk Merharina',owner:'Merharin',kolor:'#c9a24a',subs:['Kłamstwo','Czyn i cel','Duch'],
+  defs:{'Kłamstwo':'Gdybym był lepszy, nikt by nie umarł.','Czyn i cel':'Dobry cel, zła metoda: chroni ludzi, ale działa sam, bez informowania i za kogoś (wady A, C, B).','Duch':'Stary Łowca zginął w drodze do enklawy, gdy Merharin miał 8 lat. Skąd znał drogę, pozostaje tajemnicą.'},file:'Arcy/Łuk Merharina.md'},
+ {id:'wielki-mistrz',type:'Arc',nazwa:'Wielki Mistrz',owner:'Wielki Mistrz',kolor:'#8a5cb8',subs:[],
+  desc:'Lustro Merharina: jawnie przywódca Bractwa, ukryty członek organizacji. Bez POV.',file:'Arcy/Wielki Mistrz.md'},
+ {id:'organizacja',type:'Subplot',nazwa:'Organizacja i Imperium',kolor:'#4a82a6',subs:[],
+  desc:'Kilku równych przywódców, jawny rywal w wyścigu po Serce, szpiedzy w drużynie.',file:'Subploty/Organizacja i Imperium.md'},
+ {id:'dawkowanie',type:'Mechanika',nazwa:'POV, dawkowanie, telling',kolor:'#8c8c8c',subs:[],
+  desc:'Zasada „wolno / nie wolno” przy każdym beacie.',file:'Mechaniki/Dawkowanie.md'}
+];
+
+const beats=[
+ {name:'Prolog',order:0,act:1,range:'',tension:null,pov:'Kapitan gromady',stawka:0,stan:'zatw',scenes:[],
+  events:{zasiew:['S3','S4']},
+  cells:{
+   'merharin|Czyn i cel':['Jedyny, który się nie opiera; kapitan przyjmuje go do swojej gromady'],
+   'wielki-mistrz':['Otwiera ciała; zamiera na ułamek sekundy przy tatuażu (dwuznaczna mikroreakcja), potem spokojnie bagatelizuje'],
+   'dawkowanie':['Wolno: śmiertelność rytuału, kamienie z Materiami, hierarchia przez to, kto gdzie stoi. Nie wolno: nazw rang, tabu Światła (tylko cisza), historii']}},
+ {name:'The Hook',order:1,act:1,range:'1-10',tension:3,pov:'Merharin',stawka:0,stan:'zatw',scenes:[{n:'Trening gromady',sub:['Łuk Merharina']}],
+  events:{zasiew:['S1','S2']},
+  cells:{
+   'merharin|Kłamstwo':['Kłamstwo działa od pierwszych scen: kontrola, nie prosi o pomoc (A)','Opuszcza stanowisko sam, nikogo nie informuje i nie prosi o wsparcie (A)','Kłamstwo potwierdzone: gdybym był lepszy, węzeł by nie padł'],
+   'merharin|Czyn i cel':['Obcy styl walki (oszczędny, bez kamienia, łamany rytm) rozbija formację gromady; zostaje sam; izolacja i zawiść','Wezwanie zasygnalizowane na końcu sceny','Ratuje ludzi; węzeł zostaje częściowo utracony (zasłużony koszt: gdyby powiedział drużynie, utrzymaliby oba)','Zasługa trafia do dowódcy odsieczy (niezasłużona niesprawiedliwość); izolacja; bez śmierci w pierwszej bitwie'],
+   'dawkowanie':['Wolno: kamienie bojowe, formacja, rola Bractwa jednym zdaniem; bariera i węzeł pokazane jako coś, co chroni (nienaruszony, ważny, zanim zostanie uszkodzony); jedno zdanie o znaczeniu węzła, resztę niesie akcja; skutek: bariera osłabiona, hierarchia i zasługa zachowaniami, nie tellingiem','Nie wolno: barier jako mechaniki, Ciszy, historii, mechaniki Materii i nazw rang','Start wstawek archiwisty (epigrafy przed rozdziałami)']}},
+ {name:'Wyjście za bariery',order:2,act:1,range:'',tension:null,pov:'Merharin',stawka:2,stan:'zatw',scenes:[],
+  events:{zasiew:['S3','S7'],podwazenie:['S7']},
+  cells:{
+   'merharin|Kłamstwo':['Robi wszystko sam (A); wyróżnia się wyłącznie umiejętnościami','Błędy mają lokalną logikę i powtarzalny wzór (nie niekompetencja)'],
+   'merharin|Czyn i cel':['Wiatr zachowuje się nienaturalnie'],
+   'wielki-mistrz':['Sygnały dwuznaczne: czytelnik czuje ukryty motyw, ale odczytuje go błędnie','Imperium błędnie przypisuje Czwartego Archiwiście; fałszywy ślad podsuwa sam Vaelthar'],
+   'organizacja':['POV człowieka władzy z Imperium Zachodu: chce monopolu i kontroli Materii; plan siłowego przejścia przez strażników; wskazuje warunek eliminacji wyprawy; szpieg w drużynie (wiedza rozdrobniona)'],
+   'dawkowanie':['Dopiero tu telling o barierach i świecie poza nimi','Rozdział Imperium: odpowiednik rozdz. 2 Diuny; Vaelthar bez POV; rozdział nie ujawnia, że Wielki Mistrz to Vaelthar','Wstawki archiwisty o wyprawach bez powrotu mogą dołożyć trzeci sygnał obserwowania']}},
+ {name:'Midpoint',order:3,act:2,range:'',tension:null,pov:'Merharin',stawka:5,stan:'zatw',scenes:[],
+  events:{zasiew:['S4'],podwazenie:['S1']},
+  cells:{
+   'merharin|Kłamstwo':['Fałszywe podejrzenie, że nauczyciele zaaranżowali wyprawę (wina); ufa Wielkiemu Mistrzowi','Sam, bez informowania, za kogoś (A); ratuje także obcych'],
+   'merharin|Czyn i cel':['Ratuje rannego strażnika rasy; to główny, bezpośredni powód zaufania rasy'],
+   'wielki-mistrz':['Reakcja zbyt osobista i niewspółmierna (zwrot); czytelnik się boi, bohater ufa'],
+   'organizacja':['Awangarda wchodzi zbrojnie i w sile przy granicy: wyprawa podeszła tak blisko Serca, że stała się zbyt mocną konkurencją'],
+   'dawkowanie':['Ironia dramatyczna: czytelnik wie, że ujawnienie jest groźne','Opcjonalny drugi rozdział Imperium oczami przeciwnika (test: da się wyciąć bez straty = wycinamy)','Wspólny język w archaicznej odmianie','Scena czynu musi być czytelna w zatłoczonej bitwie']}},
+ {name:'Climax 5',order:4,act:3,range:'',tension:null,pov:'Merharin',stawka:null,stan:'zatw',scenes:[],
+  events:{pelne:['S3','S6','S7','S8'],podwazenie:['S6']},
+  cells:{
+   'merharin|Kłamstwo':['Test wady C: wybór należy do Vaelthara; Merharin pokazuje własną stratę i jej przyjęcie; koszt: odsłonięcie tatuażu i enklawy','Prawda: robi, co może; odpowiedzialność nie jest winą'],
+   'merharin|Czyn i cel':['Przysięga: chronić tych, którzy są przede mną; staje się pełnym Przedwiecznym'],
+   'wielki-mistrz':['Jest członkiem organizacji od początku (jeden z równych przywódców, Czwarty)','Światło pokazuje, że głos nie jest ukochaną; nie rozbija, broni Serca'],
+   'organizacja':['Organizacja i Vaelthar na miejscu; jawny cel: wykorzystać Serce','Pozostali przywódcy nie wiedzą, że Czwarty to Wielki Mistrz','Dwaj pozostali przywódcy (chcą wykorzystać) zaskoczeni rozbiciem Serca przez sektę'],
+   'dawkowanie':['Odsłony po jednej: organizacja jawna, tożsamość (22.01), przynależność (32.01), Cień']}}
+];
+
+const secretFiles={
+ S1:{tytul:'Merharin wychowany w enklawie przez Buntowników',prawda:'Merharin został wychowany w enklawie przez nauczycieli, którzy są Buntownikami.',kto:['Merharin'],target:'Kryzys u kresu sił'},
+ S3:{tytul:'Tatuaż Światła to zalążek Znaku Pieczęci',prawda:'Tatuaż Światła to zalążek Znaku Pieczęci; Bractwo widzi dawny tatuaż, ale nie rozumie, co znaczy.',kto:[],target:'Climax 5'},
+ S4:{tytul:'Wielki Mistrz jest Przedwiecznym',prawda:'Wielki Mistrz jest Przedwiecznym.',kto:['Wielki Mistrz'],target:'Rytuał rasy i wizja'}
+};
+const HINTS={
+ S6:'W xlsx zamierzone („brak sygnałów wcześniej”). Po dodaniu pliku sekretu ustaw w nim zasiew_wymagany: nie.',
+ S8:'W xlsx S8 ma zasiew w 28.01. Tego beatu nie ma w zestawie testowym.'
+};
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const keyOf=(c,s)=>'kom_'+c.id+(s?'_'+s:'');
+const cellOf=(b,c,s)=>b.cells[c.id+(s?'|'+s:'')]||[];
+const leaves=c=>c.subs.length?c.subs.map(s=>({c,s})):[{c,s:null}];
+const beatFile=b=>'Beaty/'+b.name+'.md';
+const secIds=()=>{const set=new Set();beats.forEach(b=>Object.values(b.events).forEach(a=>a.forEach(x=>set.add(x))));Object.keys(secretFiles).forEach(x=>set.add(x));return [...set].sort((a,b)=>parseInt(a.slice(1))-parseInt(b.slice(1)))};
+const kindsOf=(b,id)=>KORDER.filter(k=>(b.events[k]||[]).includes(id));
+
+const GROUPS=[...cols.map(c=>({id:c.id,label:c.nazwa,color:c.kolor})),{id:'tajemnice',label:'Tajemnice',color:'#6c9ccc'}];
+const state={tab:'plotgrid',hidden:new Set(),keys:false,orient:'cols',sel:{b:'The Hook',c:'merharin',s:'Kłamstwo'},arc:'merharin',hl:null};
+
+/* ---------- Plotgrid ---------- */
+function chipHtml(id,kind){
+  const nf=!secretFiles[id];
+  return `<button type="button" class="chip${nf?' nofile':''}" style="--k:var(--k-${kind})" data-act="secret" data-id="${id}" title="${nf?'Brak pliku sekretu':esc(secretFiles[id].tytul)}"><b>${id}</b> ${KINDS[kind]}</button>`;
+}
+function pips(v){
+  if(v==null)return '<span class="small">stawka: —</span>';
+  let h='<span class="pips" aria-hidden="true">';for(let i=0;i<6;i++)h+=`<i class="${i<=v?'on':''}"></i>`;
+  return h+`</span> <span class="small">stawka ${v}</span>`;
+}
+function orientHtml(){
+  return '<span class="eyebrow">Układ</span>'+[['cols','Beaty w kolumnach'],['rows','Beaty w wierszach']].map(([id,l])=>`<button type="button" class="pill${state.orient===id?'':' off'}" data-act="orient" data-id="${id}" style="${state.orient===id?'border-color:var(--accent)':''}">${l}</button>`).join('');
+}
+function renderGrid(){return state.orient==='rows'?renderGridRows():renderGridT();}
+/* Układ główny: beaty jako pierwszy wiersz (oś czasu w poziomie), wątki i tajemnice jako wiersze */
+function renderGridT(){
+  const vis=cols.filter(c=>!state.hidden.has(c.id));
+  const showSec=!state.hidden.has('tajemnice');
+  let h='<div class="toolbar">'+orientHtml()+'<span class="eyebrow">Warstwy</span>';
+  GROUPS.forEach(g=>{const off=state.hidden.has(g.id);
+    h+=`<label class="pill${off?' off':''}"><input type="checkbox" data-act="grp" data-id="${g.id}" ${off?'':'checked'}><span class="dot" style="background:${g.color}"></span>${esc(g.label)}</label>`;});
+  h+=`<label class="pill"><input type="checkbox" data-act="keys" ${state.keys?'checked':''}>Pokaż klucze</label></div>`;
+  h+=renderDetail();
+  const span=beats.length+2;
+  h+='<div class="scroll"><table><thead><tr><th class="sticky rl"><span class="eyebrow">Wątek</span><br><span class="small">'+beats.length+' beatów</span></th>';
+  beats.forEach(b=>{
+    h+=`<th class="col" scope="col"><div class="no mono small">${String(b.order).padStart(2,'0')}</div><div class="nm" style="font-weight:600;font-size:14px">${esc(b.name)}</div><div class="small">Akt ${b.act}${b.range?' · '+b.range+'%':''} · POV: ${esc(b.pov)}</div><div style="margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge ${b.stan}">${b.stan}</span>${pips(b.stawka)}</div>${b.scenes.length?`<div class="small" style="margin-top:4px">Sceny: ${b.scenes.map(s=>esc(s.n)).join(', ')}</div>`:''}</th>`;});
+  h+='<th class="fillc">Wypełnienie</th></tr></thead><tbody>';
+  vis.forEach(c=>{
+    const ls=leaves(c);
+    if(ls.length>1)h+=`<tr class="band" style="--gc:${c.kolor}"><th colspan="${span}"><div class="bandin"><span class="t">${c.type}${c.owner?' · '+esc(c.owner):''}</span><b>${esc(c.nazwa)}</b></div></th></tr>`;
+    ls.forEach(({s})=>{
+      h+=`<tr><th class="sticky rl" scope="row" style="border-left:3px solid ${c.kolor}">${s?'':`<span class="eyebrow">${c.type}</span><br>`}<b>${esc(s||c.nazwa)}</b>${state.keys?`<span class="k">${esc(keyOf(c,s))}</span>`:''}</th>`;
+      let n=0;
+      beats.forEach(b=>{
+        const v=cellOf(b,c,s);if(v.length)n++;
+        const sel=state.sel&&state.sel.b===b.name&&state.sel.c===c.id&&(state.sel.s||null)===s;
+        const long=v.join(' ').length>200||v.length>3;
+        h+=`<td class="cell col${v.length?'':' empty'}${sel?' sel':''}" data-act="cell" data-b="${esc(b.name)}" data-c="${c.id}" data-s="${s?esc(s):''}" tabindex="0"><div class="in${long?' long':''}">${v.length?'<ul>'+v.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':''}</div></td>`;});
+      h+=`<td class="fillc">${n} z ${beats.length}</td></tr>`;});
+  });
+  if(showSec){
+    h+=`<tr class="band" style="--gc:#6c9ccc"><th colspan="${span}"><div class="bandin"><span class="t">Wyliczane</span><b>Tajemnice</b><span class="small"> znaczniki sekret_* z beatów, jeden wiersz na sekret</span></div></th></tr>`;
+    secIds().forEach(id=>{
+      const f=secretFiles[id];let n=0;
+      h+=`<tr><th class="sticky rl" scope="row" style="border-left:3px solid #6c9ccc"><b>${id}</b><br><span class="small">${f?esc(f.tytul):'brak pliku sekretu'}</span></th>`;
+      beats.forEach(b=>{const ks=kindsOf(b,id);if(ks.length)n++;h+=`<td class="col"><div style="padding:8px 10px" class="chips">${ks.map(k=>chipHtml(id,k)).join('')}</div></td>`;});
+      h+=`<td class="fillc">${n} z ${beats.length}</td></tr>`;});
+  }
+  h+='</tbody></table></div>';
+  h+=`<div class="legend"><span class="eyebrow">Zdarzenia sekretów</span>${KORDER.map(k=>`<span class="chip" style="--k:var(--k-${k});cursor:default">${KINDS[k]}</span>`).join('')}<span class="chip nofile" style="--k:var(--muted);cursor:default">linia przerywana: brak pliku sekretu</span></div>`;
+  return h;
+}
+function renderGridRows(){
+  const vis=cols.filter(c=>!state.hidden.has(c.id));
+  const showSec=!state.hidden.has('tajemnice');
+  let h='<div class="toolbar">'+orientHtml()+'<span class="eyebrow">Kolumny</span>';
+  GROUPS.forEach(g=>{const off=state.hidden.has(g.id);
+    h+=`<label class="pill${off?' off':''}"><input type="checkbox" data-act="grp" data-id="${g.id}" ${off?'':'checked'}><span class="dot" style="background:${g.color}"></span>${esc(g.label)}</label>`;});
+  h+=`<label class="pill"><input type="checkbox" data-act="keys" ${state.keys?'checked':''}>Pokaż klucze</label></div>`;
+  h+=renderDetail();
+  h+='<div class="scroll"><table><thead><tr><th class="sticky beat" rowspan="2"><span class="eyebrow">Beat</span><br><span class="small">'+beats.length+' wierszy</span></th>';
+  vis.forEach(c=>{
+    const n=leaves(c).length;
+    const rs=c.subs.length?'':' rowspan="2"';
+    h+=`<th class="gh col" colspan="${n}"${rs} style="--gc:${c.kolor}"><span class="t">${c.type}${c.owner?' · '+esc(c.owner):''}</span><span class="n">${esc(c.nazwa)}</span>${(!c.subs.length&&state.keys)?`<span class="k">${keyOf(c,null)}</span>`:''}</th>`;});
+  if(showSec)h+=`<th class="gh col" rowspan="2" style="--gc:#6c9ccc"><span class="t">Wyliczane</span><span class="n">Tajemnice</span>${state.keys?'<span class="k">sekret_* (znaczniki)</span>':''}</th>`;
+  h+='</tr><tr>';
+  vis.forEach(c=>c.subs.forEach(s=>{h+=`<th class="sh col">${esc(s)}${state.keys?`<span class="gh"><span class="k">${esc(keyOf(c,s))}</span></span>`:''}</th>`;}));
+  h+='</tr></thead><tbody>';
+  beats.forEach(b=>{
+    h+=`<tr><th class="sticky beat" scope="row"><div class="no">${String(b.order).padStart(2,'0')}</div><div class="nm">${esc(b.name)}</div><div class="meta">Akt ${b.act}${b.range?' · '+b.range+'%':''} · POV: ${esc(b.pov)}</div><div style="margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge ${b.stan}">${b.stan}</span>${pips(b.stawka)}</div>${b.scenes.length?`<div class="small" style="margin-top:4px">Sceny: ${b.scenes.map(s=>esc(s.n)).join(', ')}</div>`:''}</th>`;
+    vis.forEach(c=>leaves(c).forEach(({s})=>{
+      const v=cellOf(b,c,s);const sel=state.sel&&state.sel.b===b.name&&state.sel.c===c.id&&(state.sel.s||null)===s;
+      const long=v.join(' ').length>200||v.length>3;
+      h+=`<td class="cell col${v.length?'':' empty'}${sel?' sel':''}" data-act="cell" data-b="${esc(b.name)}" data-c="${c.id}" data-s="${s?esc(s):''}" tabindex="0"><div class="in${long?' long':''}">${v.length?'<ul>'+v.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':''}</div></td>`;}));
+    if(showSec){const ch=[];KORDER.forEach(k=>(b.events[k]||[]).forEach(id=>ch.push(chipHtml(id,k))));
+      h+=`<td class="col"><div style="padding:8px 10px" class="chips">${ch.join('')||'<span class="small">brak zdarzeń</span>'}</div></td>`;}
+    h+='</tr>';});
+  h+='</tbody><tfoot><tr><td class="sticky"><b>Wypełnienie</b></td>';
+  vis.forEach(c=>leaves(c).forEach(({s})=>{const n=beats.filter(b=>cellOf(b,c,s).length).length;h+=`<td>${n} z ${beats.length} beatów</td>`;}));
+  if(showSec)h+=`<td>${secIds().length} sekretów, ${secIds().filter(i=>!secretFiles[i]).length} bez pliku</td>`;
+  h+='</tr></tfoot></table></div>';
+  h+=`<div class="legend"><span class="eyebrow">Zdarzenia sekretów</span>${KORDER.map(k=>`<span class="chip" style="--k:var(--k-${k});cursor:default">${KINDS[k]}</span>`).join('')}<span class="chip nofile" style="--k:var(--muted);cursor:default">linia przerywana: brak pliku sekretu</span></div>`;
+  return h;
+}
+function renderDetail(){
+  const s=state.sel;const b=beats.find(x=>x.name===s.b);const c=cols.find(x=>x.id===s.c);const sub=s.s||null;
+  const v=cellOf(b,c,sub);const k=keyOf(c,sub);
+  let yaml=v.length?k+':\n'+v.map(x=>'  - '+JSON.stringify(x)).join('\n'):'(brak klucza w pliku)';
+  const def=sub&&c.defs?c.defs[sub]:(c.desc||'');
+  return `<div class="detail" aria-live="polite"><div><div class="eyebrow">Wybrana komórka</div><h2>${esc(b.name)} × ${esc(c.nazwa)}${sub?' · '+esc(sub):''}</h2><div class="path">${esc(beatFile(b))}<br>klucz: ${esc(k)}</div><p>${v.length?`Lista, ${v.length} ${v.length===1?'pozycja':(v.length<5?'pozycje':'pozycji')}. Wpis w siatce zapisze się do frontmattera tego beatu.`:`Pusta komórka. Wpisanie tekstu doda do pliku klucz ${esc(k)}, bez dotykania pozostałych beatów.`}</p>${def?`<p><b>Definicja z pliku kolumny:</b> ${esc(def)}</p>`:''}</div><pre>${esc(yaml)}</pre></div>`;
+}
+
+/* ---------- Tajemnice ---------- */
+function renderSecrets(){
+  const ids=secIds();
+  let h='<div class="note"><b>Ta tabela jest w całości wyliczana</b> ze znaczników <span class="mono">sekret_*</span> w beatach. W plotgridzie to te same dane (grupa wierszy Tajemnice). Tu dochodzą prawda i cel odsłony (z pliku sekretu) oraz wyliczony stan. W xlsx był to osobny arkusz, aktualizowany ręcznie.</div>';
+  h+='<div class="scroll"><table><thead><tr><th class="sticky beat">Sekret</th>';
+  beats.forEach(b=>h+=`<th class="col" style="min-width:130px"><span class="n">${esc(b.name)}</span><br><span class="small">Akt ${b.act}</span></th>`);
+  h+='<th class="col">Cel odsłony</th><th class="col">Stan</th></tr></thead><tbody>';
+  ids.forEach(id=>{
+    const f=secretFiles[id];
+    const firstFull=beats.find(b=>kindsOf(b,id).includes('pelne'));
+    const hasSeed=beats.some(b=>kindsOf(b,id).includes('zasiew'));
+    const status=firstFull?'odsłonięty w: '+firstFull.name:(hasSeed?'zasiany, bez odsłony pełnej':'brak zdarzeń');
+    h+=`<tr class="${state.hl===id?'hl':''}"><th class="sticky beat" scope="row"><div class="nm">${id}</div>${f?`<div class="meta">${esc(f.tytul)}</div><div class="small" style="margin-top:4px">${esc(f.prawda)}</div>`:'<div class="small">brak pliku Sekrety/'+id+'.md</div>'}</th>`;
+    beats.forEach(b=>{const ks=kindsOf(b,id);h+=`<td><div style="padding:8px 10px" class="chips">${ks.map(k=>`<span class="chip" style="--k:var(--k-${k});cursor:default">${KINDS[k]}</span>`).join('')}</div></td>`;});
+    let tgt='<span class="small">nie ustawiono</span>';
+    if(f){const ex=beats.some(b=>b.name===f.target);tgt=`${esc(f.target)}<br><span class="${ex?'ok':'warn'} small">${ex?'beat istnieje':'beat nie istnieje'}</span>`;}
+    h+=`<td style="padding:8px 10px">${tgt}</td><td style="padding:8px 10px" class="small">${esc(status)}</td></tr>`;});
+  h+='</tbody></table></div>';
+  h+=`<div class="legend"><span class="eyebrow">Zdarzenia</span>${KORDER.map(k=>`<span class="chip" style="--k:var(--k-${k});cursor:default">${KINDS[k]}</span>`).join('')}</div>`;
+  return h;
+}
+
+/* ---------- Arc ---------- */
+function renderArc(){
+  const arcs=cols.filter(c=>c.type==='Arc');const c=cols.find(x=>x.id===state.arc)||arcs[0];
+  let h='<div class="toolbar"><span class="eyebrow">Arc</span>'+arcs.map(a=>`<button type="button" class="pill${a.id===c.id?'':' off'}" data-act="arc" data-id="${a.id}" style="${a.id===c.id?'border-color:var(--accent)':''}"><span class="dot" style="background:${a.kolor}"></span>${esc(a.nazwa)}</button>`).join('')+'</div>';
+  h+='<div class="note"><b>Te same wiersze co w plotgridzie, ale tylko jeden arc.</b> Nie ma osobnego zapisu: widok składa się z kluczy <span class="mono">'+esc(keyOf(c,c.subs[0]||null))+'</span> i pozostałych w plikach beatów. Definicje (lewa kolumna) pochodzą z pliku arcu.</div>';
+  h+='<div class="scroll"><table><thead><tr><th class="sticky beat">'+esc(c.nazwa)+'<br><span class="small">właściciel: '+esc(c.owner)+'</span></th>';
+  beats.forEach(b=>h+=`<th class="col" style="min-width:210px"><span class="n">${esc(b.name)}</span><br><span class="small">Akt ${b.act}</span></th>`);
+  h+='</tr></thead><tbody>';
+  leaves(c).forEach(({s})=>{
+    const def=s?c.defs[s]:c.desc;
+    h+=`<tr><th class="sticky beat" scope="row" style="max-width:260px"><div class="nm">${esc(s||c.nazwa)}</div><div class="small">${esc(def||'')}</div></th>`;
+    beats.forEach(b=>{const v=cellOf(b,c,s);h+=`<td class="cell${v.length?'':' empty'}" style="cursor:default"><div class="in">${v.length?'<ul>'+v.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':''}</div></td>`;});
+    h+='</tr>';});
+  h+='</tbody></table></div>';
+  return h;
+}
+
+/* ---------- Walidacja ---------- */
+function validate(){
+  const out=[];const ids=secIds();
+  ids.forEach(id=>{
+    const f=secretFiles[id];
+    const where=beats.filter(b=>kindsOf(b,id).length).map(b=>b.name+' ('+kindsOf(b,id).map(k=>KINDS[k]).join(', ')+')');
+    if(!f)out.push({sev:'warn',t:'Znacznik sekretu bez pliku: '+id,d:'Wskazują go: '+where.join('; ')+'. Bez pliku brakuje prawdy, wiedzących i celu odsłony.',s:'Sekrety/'+id+'.md'});
+    if(f&&!beats.some(b=>b.name===f.target))out.push({sev:'warn',t:'Cel odsłony nie jest beatem: '+id,d:'reveal_target wskazuje „'+f.target+'”, a takiego beatu nie ma w zestawie.',s:'Sekrety/'+id+'.md'});
+    if(f&&!beats.some(b=>kindsOf(b,id).includes('pelne')))out.push({sev:'warn',t:'Brak odsłony pełnej: '+id,d:'Sekret ma plik, ale żaden beat nie zawiera znacznika sekret_pelne.',s:'Sekrety/'+id+'.md'});
+    const full=beats.find(b=>kindsOf(b,id).includes('pelne'));
+    if(full){const seeded=beats.some(b=>b.order<=full.order&&kindsOf(b,id).includes('zasiew'));
+      if(!seeded)out.push({sev:'warn',t:'Odsłona pełna bez zasiewu: '+id,d:'Odsłona w beacie „'+full.name+'”, wcześniej brak zasiewu. '+(HINTS[id]||''),s:beatFile(full)});}
+  });
+  beats.forEach(b=>{const n=(b.events.pelne||[]).length;
+    if(n>1)out.push({sev:'warn',t:'Kilka odsłon pełnych w jednym beacie: '+b.name,d:n+' odsłon pełnych ('+b.events.pelne.join(', ')+'). Reguła „odsłony po jednej” nie rozróżnia kolejności wewnątrz beatu (otwarta decyzja A / B / C).',s:beatFile(b)});});
+  cols.forEach(c=>leaves(c).forEach(({s})=>{const n=beats.filter(b=>cellOf(b,c,s).length).length;
+    if(n===0)out.push({sev:'info',t:'Pusta podkolumna: '+(s||c.nazwa),d:'Kolumna istnieje (jest na liście podkolumn w pliku arcu), ale żaden beat nie ma w niej treści.',s:c.file});}));
+  const nt=beats.filter(b=>b.tension==null).length;
+  out.push({sev:'info',t:'Brak napięcia w '+nt+' z '+beats.length+' beatów',d:'Oś Y wykresu napięcia ma dane tylko dla beatów z wypełnionym StoryTension.',s:'Beaty/*.md'});
+  out.push({sev:'info',t:'Kolumny z xlsx bez pliku wątku',d:'Rasa, Drużyna, Sekta, Enklawa, Tatuaż/Światło/Wiatr. Każda to osobny plik Subplot, po dodaniu pojawi się jako kolumna.',s:'Subploty/'});
+  out.push({sev:'info',t:'Stan beatu po spłaszczeniu',d:'Wyjście za bariery i Midpoint mają w xlsx wiersze „zatw. + prop.”. Reguła „najsłabszy stan wygrywa” ustawiłaby tu prop, a pliki testowe mają zatw.',s:'Beaty/Wyjście za bariery.md, Beaty/Midpoint.md'});
+  const ok=[];
+  beats.forEach(b=>b.scenes.forEach(sc=>{const all=sc.sub.every(n=>cols.some(c=>c.nazwa===n));
+    if(all)ok.push({t:'Scena „'+sc.n+'”: Subplot pasuje do nazwy arcu',d:'„'+sc.sub.join(', ')+'” = pole nazwa w pliku arcu.'});}));
+  ok.push({t:'Nieznane klucze kom_*: 0',d:'Każdy klucz w beatach odpowiada kolumnie lub podkolumnie z pliku kolumny.'});
+  ok.push({t:'Plik z Class: Test pominięty',d:'Warianty/T1 - The Hook akapit.md ma klucze kom_*, ale nie jest beatem.'});
+  return {out,ok};
+}
+function renderValid(){
+  const {out,ok}=validate();const w=out.filter(x=>x.sev==='warn').length,i=out.filter(x=>x.sev==='info').length;
+  let h=`<div class="counts"><div class="count"><div class="v warn">${w}</div><div class="small">ostrzeżenia</div></div><div class="count"><div class="v info">${i}</div><div class="small">informacje</div></div><div class="count"><div class="v ok">${ok.length}</div><div class="small">zgodne</div></div></div>`;
+  h+='<div class="note">Walidacja jest liczona z tych samych plików co siatka. Nic z tego nie trzeba wpisywać ręcznie.</div><ul class="vlist">';
+  out.forEach(x=>h+=`<li class="vitem"><span class="sev ${x.sev}">${x.sev==='warn'?'Ostrzeżenie':'Informacja'}</span><span class="t">${esc(x.t)}</span><span class="d">${esc(x.d)}</span><span class="s">${esc(x.s)}</span></li>`);
+  ok.forEach(x=>h+=`<li class="vitem"><span class="sev ok">Zgodne</span><span class="t">${esc(x.t)}</span><span class="d">${esc(x.d)}</span></li>`);
+  return h+'</ul>';
+}
+
+/* ---------- Shell ---------- */
+const TABS=[['plotgrid','Plotgrid'],['tajemnice','Tajemnice'],['arc','Arc'],['walidacja','Walidacja']];
+function render(){
+  document.getElementById('tabs').innerHTML=TABS.map(([id,l])=>`<button class="tab" role="tab" type="button" aria-selected="${state.tab===id}" data-act="tab" data-id="${id}">${l}</button>`).join('');
+  const v=document.getElementById('view');
+  v.innerHTML=state.tab==='plotgrid'?renderGrid():state.tab==='tajemnice'?renderSecrets():state.tab==='arc'?renderArc():renderValid();
+  fixHeader();
+}
+function fixHeader(){
+  const t=document.querySelector('thead tr');if(t&&document.querySelector('.scroll'))document.querySelector('.scroll').style.setProperty('--h1',t.getBoundingClientRect().height+'px');
+}
+function setTab(t){if(!TABS.some(x=>x[0]===t))t='plotgrid';state.tab=t;if(location.hash.slice(1)!==t){try{history.replaceState(null,'','#'+t)}catch(e){}}render();}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act;
+  if(a==='tab'){setTab(el.dataset.id);}
+  else if(a==='cell'){state.sel={b:el.dataset.b,c:el.dataset.c,s:el.dataset.s||null};render();}
+  else if(a==='secret'){e.stopPropagation();state.hl=el.dataset.id;setTab('tajemnice');}
+  else if(a==='arc'){state.arc=el.dataset.id;render();}
+  else if(a==='orient'){state.orient=el.dataset.id;render();}
+});
+document.addEventListener('change',e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;
+  if(el.dataset.act==='grp'){el.checked?state.hidden.delete(el.dataset.id):state.hidden.add(el.dataset.id);render();}
+  if(el.dataset.act==='keys'){state.keys=el.checked;render();}
+});
+document.addEventListener('keydown',e=>{
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('td.cell[data-act="cell"]')){e.preventDefault();e.target.click();}
+});
+window.addEventListener('hashchange',()=>setTab(location.hash.slice(1)));
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const r=document.documentElement;const cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+  r.setAttribute('data-theme',cur==='dark'?'light':'dark');
+});
+state.tab=TABS.some(x=>x[0]===location.hash.slice(1))?location.hash.slice(1):'plotgrid';
+render();
+</script>
+
+</body></html>

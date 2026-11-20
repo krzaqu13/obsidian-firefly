@@ -1,0 +1,875 @@
+.pole-wykresu {
+    background-color: #16120e;
+    border: 1px solid;
+    border-color: #55595c;
+    min-height: 488px;
+    min-width: 1320px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.pole-wykresu .akt {
+    background-color: #282117;
+    height: 393px;
+    left: 601px;
+    opacity: 0.4;
+    position: absolute;
+    top: 49px;
+    width: 125px;
+}
+
+.pole-wykresu .div {
+    background-color: #373125;
+    height: 392px;
+    left: 872px;
+    opacity: 0.4;
+    position: absolute;
+    top: 48px;
+    width: 125px;
+}
+
+.pole-wykresu .img {
+    height: 392px;
+    left: 1007px;
+    position: absolute;
+    top: 49px;
+    width: 125px;
+}
+
+.pole-wykresu .akt-2 {
+    background-color: #373125;
+    height: 392px;
+    left: 1141px;
+    opacity: 0.4;
+    position: absolute;
+    top: 48px;
+    width: 125px;
+}
+
+.pole-wykresu .akt-3 {
+    background-color: #1c1914;
+    height: 392px;
+    left: 60px;
+    opacity: 0.4;
+    position: absolute;
+    top: 48px;
+    width: 127px;
+}
+
+.pole-wykresu .akt-4 {
+    background-color: #1c1914;
+    height: 392px;
+    left: 197px;
+    opacity: 0.4;
+    position: absolute;
+    top: 47px;
+    width: 125px;
+}
+
+.pole-wykresu .akt-5 {
+    background-color: #1c1914;
+    height: 392px;
+    left: 332px;
+    opacity: 0.4;
+    position: absolute;
+    top: 49px;
+    width: 125px;
+}
+
+.pole-wykresu .akt-6 {
+    background-color: #282117;
+    height: 393px;
+    left: 467px;
+    opacity: 0.4;
+    position: absolute;
+    top: 48px;
+    width: 125px;
+}
+
+.pole-wykresu .gwny-uk-fabuy {
+    height: 99px;
+    left: 534px;
+    position: absolute;
+    top: 184px;
+    width: 118px;
+}
+
+.pole-wykresu .akt-7 {
+    background-color: #282117;
+    height: 393px;
+    left: 738px;
+    opacity: 0.4;
+    position: absolute;
+    top: 48px;
+    width: 125px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-2 {
+    height: 125px;
+    left: 939px;
+    position: absolute;
+    top: 106px;
+    width: 126px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-3 {
+    height: 34px;
+    left: 1208px;
+    position: absolute;
+    top: 181px;
+    width: 59px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-4 {
+    height: 72px;
+    left: 1075px;
+    position: absolute;
+    top: 104px;
+    width: 122px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-5 {
+    height: 53px;
+    left: 664px;
+    position: absolute;
+    top: 124px;
+    width: 128px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-6 {
+    height: 105px;
+    left: 804px;
+    position: absolute;
+    top: 126px;
+    width: 126px;
+}
+
+.pole-wykresu .nazwa-beatu {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 1160px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 57px;
+    width: 94px;
+}
+
+.pole-wykresu .text-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 1012px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 57px;
+    width: 112px;
+}
+
+.pole-wykresu .nazwa-beatu-2 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 869px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 132px;
+}
+
+.pole-wykresu .nazwa-beatu-3 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 720px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 157px;
+}
+
+.pole-wykresu .nazwa-beatu-4 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 581px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 157px;
+}
+
+.pole-wykresu .nazwa-beatu-5 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 451px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 157px;
+}
+
+.pole-wykresu .nazwa-beatu-6 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 312px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 157px;
+}
+
+.pole-wykresu .nazwa-beatu-7 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 194px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 132px;
+}
+
+.pole-wykresu .nazwa-beatu-8 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #ccd0d2;
+    display: -webkit-box;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 10px;
+    font-weight: 600;
+    left: 63px;
+    letter-spacing: 0;
+    line-height: normal;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    top: 59px;
+    width: 122px;
+}
+
+.pole-wykresu .group {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 930px;
+    position: absolute;
+    top: 230px;
+    width: 10px;
+}
+
+.pole-wykresu .wze-fabuy-wrapper {
+    border: 2px solid;
+    border-color: #5d3d40;
+    border-radius: 9px;
+    display: flex;
+    height: 18px;
+    left: 649px;
+    position: absolute;
+    top: 171px;
+    width: 18px;
+}
+
+.pole-wykresu .wze-fabuy {
+    background-color: #5d3d40;
+    border-radius: 5px;
+    height: 10px;
+    margin-left: 4px;
+    margin-top: 4px;
+    width: 10px;
+}
+
+.pole-wykresu .group-2 {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 794px;
+    position: absolute;
+    top: 118px;
+    width: 10px;
+}
+
+.pole-wykresu .group-3 {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 1065px;
+    position: absolute;
+    top: 97px;
+    width: 10px;
+}
+
+.pole-wykresu .group-4 {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 1198px;
+    position: absolute;
+    top: 174px;
+    width: 10px;
+}
+
+.pole-wykresu .group-5 {
+    background-image: url(./w-ze-fabu-y.svg);
+    background-size: 100% 100%;
+    height: 10px;
+    left: 525px;
+    position: absolute;
+    top: 282px;
+    width: 10px;
+}
+
+.pole-wykresu .group-6 {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 387px;
+    position: absolute;
+    top: 237px;
+    width: 10px;
+}
+
+.pole-wykresu .group-7 {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 256px;
+    position: absolute;
+    top: 305px;
+    width: 10px;
+}
+
+.pole-wykresu .group-8 {
+    background-color: #e7c978;
+    border-radius: 5px;
+    height: 10px;
+    left: 121px;
+    position: absolute;
+    top: 350px;
+    width: 10px;
+}
+
+.pole-wykresu .nazwa-osi {
+    color: #ccd0d2;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 10px;
+    font-weight: 700;
+    left: -19px;
+    letter-spacing: 0.7px;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 228px;
+    transform: rotate(-90deg);
+    width: 72px;
+}
+
+.pole-wykresu .warto-osi {
+    color: #ccd0d2;
+    font-family: "Karla-Regular", Helvetica;
+    font-size: 10px;
+    font-weight: 400;
+    left: 24px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: right;
+    top: 435px;
+    width: 22px;
+}
+
+.pole-wykresu .warto-osi-2 {
+    color: #ccd0d2;
+    font-family: "Karla-Regular", Helvetica;
+    font-size: 10px;
+    font-weight: 400;
+    left: 24px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: right;
+    top: 304px;
+    width: 22px;
+}
+
+.pole-wykresu .warto-osi-3 {
+    color: #ccd0d2;
+    font-family: "Karla-Regular", Helvetica;
+    font-size: 10px;
+    font-weight: 400;
+    left: 24px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: right;
+    top: 174px;
+    width: 22px;
+}
+
+.pole-wykresu .warto-osi-4 {
+    color: #ccd0d2;
+    font-family: "Karla-Regular", Helvetica;
+    font-size: 10px;
+    font-weight: 400;
+    left: 24px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    text-align: right;
+    top: 43px;
+    width: 22px;
+}
+
+.pole-wykresu .linia-siatki {
+    background-color: #343739;
+    height: 1px;
+    left: 60px;
+    opacity: 0.46;
+    position: absolute;
+    top: 440px;
+    width: 1207px;
+}
+
+.pole-wykresu .nazwa-aktu {
+    color: #ccd0d2;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 10px;
+    font-weight: 700;
+    left: 1054px;
+    letter-spacing: 1px;
+    line-height: normal;
+    position: absolute;
+    top: 14px;
+    white-space: nowrap;
+}
+
+.pole-wykresu .nazwa-aktu-2 {
+    color: #ccd0d2;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 10px;
+    font-weight: 700;
+    left: 644px;
+    letter-spacing: 1px;
+    line-height: normal;
+    position: absolute;
+    top: 8px;
+    white-space: nowrap;
+}
+
+.pole-wykresu .nazwa-aktu-3 {
+    color: #ccd0d2;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 10px;
+    font-weight: 700;
+    left: 244px;
+    letter-spacing: 1px;
+    line-height: normal;
+    position: absolute;
+    top: 14px;
+    white-space: nowrap;
+}
+
+.pole-wykresu .group-9 {
+    height: 124px;
+    left: 63px;
+    position: absolute;
+    top: 317px;
+    width: 1204px;
+}
+
+.pole-wykresu .linia-siatki-2 {
+    background-color: #55595c;
+    height: 1px;
+    left: 60px;
+    opacity: 0.46;
+    position: absolute;
+    top: 48px;
+    width: 1207px;
+}
+
+.pole-wykresu .line {
+    height: 418px;
+    left: 658px;
+    object-fit: cover;
+    position: absolute;
+    top: 23px;
+    width: 1px;
+}
+
+.pole-wykresu .linia-siatki-3 {
+    background-color: #55595c;
+    height: 1px;
+    left: 855px;
+    opacity: 0.46;
+    position: absolute;
+    top: 155px;
+    transform: rotate(90deg);
+    width: 161px;
+}
+
+.pole-wykresu .linia-siatki-4 {
+    background-color: #55595c;
+    height: 1px;
+    left: 1151px;
+    opacity: 0.46;
+    position: absolute;
+    top: 126px;
+    transform: rotate(90deg);
+    width: 106px;
+}
+
+.pole-wykresu .linia-siatki-5 {
+    background-color: #55595c;
+    height: 1px;
+    left: 1056px;
+    opacity: 0.46;
+    position: absolute;
+    top: 86px;
+    transform: rotate(90deg);
+    width: 27px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-7 {
+    height: 83px;
+    left: 59px;
+    position: absolute;
+    top: 359px;
+    width: 63px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-8 {
+    height: 41px;
+    left: 131px;
+    position: absolute;
+    top: 311px;
+    width: 124px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-9 {
+    height: 64px;
+    left: 266px;
+    position: absolute;
+    top: 243px;
+    width: 120px;
+}
+
+.pole-wykresu .gwny-uk-fabuy-10 {
+    height: 43px;
+    left: 398px;
+    position: absolute;
+    top: 243px;
+    width: 125px;
+}
+
+.pole-wykresu .karta-wskazanej {
+    align-items: flex-start;
+    background-color: #16120e;
+    border: 1px solid;
+    border-color: #57383e;
+    border-radius: 8px;
+    box-shadow: 0px 14px 30px #00000066;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    left: 676px;
+    overflow: hidden;
+    padding: 14px;
+    position: absolute;
+    top: 102px;
+    width: 322px;
+}
+
+.pole-wykresu .nagwek-karty {
+    align-items: center;
+    align-self: stretch;
+    display: flex;
+    height: 15px;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.pole-wykresu .typ {
+    color: #57383e;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 12px;
+    font-weight: 700;
+    height: 17px;
+    letter-spacing: 0.8px;
+    line-height: normal;
+    margin-top: -2px;
+    position: relative;
+    width: 154px;
+}
+
+.pole-wykresu .status {
+    align-items: flex-start;
+    background-color: #2b2a20;
+    border-radius: 5px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    margin-bottom: -1px;
+    margin-top: -1px;
+    overflow: hidden;
+    padding: 3px 7px;
+    position: relative;
+}
+
+.pole-wykresu .etykieta {
+    color: #d39b54;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.pole-wykresu .tytu-sceny {
+    align-self: stretch;
+    color: #ccbd9b;
+    font-family: "Karla-Bold", Helvetica;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: normal;
+    position: relative;
+}
+
+.pole-wykresu .streszczenie {
+    align-self: stretch;
+    color: #e0e4e6;
+    font-family: "Karla-Regular", Helvetica;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 16px;
+    position: relative;
+}
+
+.pole-wykresu .tagi-sceny {
+    align-items: flex-start;
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 6px;
+    position: relative;
+}
+
+.pole-wykresu .tag {
+    align-items: flex-start;
+    background-color: #0d0f0c;
+    border: 1px solid;
+    border-color: #2b3026;
+    border-radius: 5px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    overflow: hidden;
+    padding: 3px 7px;
+    position: relative;
+}
+
+.pole-wykresu .etykieta-2 {
+    color: #e7c978;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.pole-wykresu .etykieta-3 {
+    color: #c97883;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.pole-wykresu .etykieta-4 {
+    color: #747b6c;
+    font-family: "Karla-SemiBold", Helvetica;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.pole-wykresu .rectangle {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 221px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-2 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 618px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-3 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 489px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-4 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 351px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-5 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 83px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-6 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 759px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-7 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 895px;
+    position: absolute;
+    top: 55px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-8 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 1029px;
+    position: absolute;
+    top: 53px;
+    width: 81px;
+}
+
+.pole-wykresu .rectangle-9 {
+    border: 1px solid;
+    border-color: #313334;
+    border-radius: 5px;
+    height: 20px;
+    left: 1164px;
+    position: absolute;
+    top: 53px;
+    width: 81px;
+}

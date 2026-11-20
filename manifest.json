@@ -1,0 +1,10 @@
+{
+	"id": "firefly",
+	"name": "Firefly",
+	"version": "0.1.0",
+	"minAppVersion": "1.0.0",
+	"description": "Narrative planning and worldbuilding tool for writers.",
+	"author": "Krzysztof",
+	"authorUrl": "",
+	"isDesktopOnly": true
+}
